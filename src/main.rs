@@ -26,7 +26,7 @@ fn genpdf(pdf_type: String, data: Json<Value>) -> Option<NamedFile> {
 
     let uuid = Uuid::new_v4();
     let html_file = PathBuf::from("out").join(format!("{}.html", uuid));
-    handlebars.render_to_write(pdf_type.as_str(), &data.0, &mut File::create(&html_file).unwrap());
+    handlebars.render_to_write(pdf_type.as_str(), &*data, &mut File::create(&html_file).unwrap());
     let out_file = PathBuf::from("out").join(format!("{}.pdf", uuid));
 
     let output = Command::new("wkhtmltopdf")
