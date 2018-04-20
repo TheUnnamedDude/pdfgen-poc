@@ -1,5 +1,5 @@
 [package]
-name = "store_and_forget"
+name = "pdfgen"
 version = "0.1.0"
 authors = ["Kevin Sillerud <kevin.sillerud@gmail.com>"]
 
