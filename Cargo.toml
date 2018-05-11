@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["Kevin Sillerud <kevin.sillerud@gmail.com>"]
 
 [dependencies]
+chrono = "0.4"
 rocket = "0.3.8"
 rocket_codegen = "0.3.8"
 serde = "1.0"

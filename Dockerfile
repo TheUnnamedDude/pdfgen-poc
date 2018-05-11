@@ -12,9 +12,14 @@ WORKDIR /root
 
 COPY . .
 
-RUN cargo build --release
+RUN cargo build
+#--release
 
 FROM archlinux/base
+ENV RUST_BACKTRACE=1
+ENV LC_ALL="no_NB.UTF-8"
+ENV LANG="no_NB.UTF-8"
+ENV TZ="Europe/Oslo"
 
 RUN pacman -Syy
 RUN pacman --noconfirm -S bzip2 expat fontconfig freetype2 gcc-libs glib2 glibc graphite harfbuzz libjpeg-turbo libx11 libxau libxdmcp libxext libxrender pcre zlib gsfonts tar xz
@@ -27,7 +32,7 @@ RUN cp -R * /usr
 
 WORKDIR /app
 
-COPY --from=0 /root/target/release/pdfgen .
+COPY --from=0 /root/target/debug/pdfgen .
 COPY Rocket.toml .
 RUN mkdir -p /app/out
 COPY templates templates/
