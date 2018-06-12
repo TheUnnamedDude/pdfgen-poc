@@ -26,6 +26,7 @@ use uuid::Uuid;
 use std::fs::File;
 use std::path::PathBuf;
 use std::process::Command;
+use std::time::{Duration, Instant};
 
 use wkhtmltopdf::HtmlConverter;
 
@@ -44,6 +45,7 @@ struct GenerationParams {
 
 #[post("/<pdf_type>?<params>", format = "application/json", data = "<data>")]
 fn genpdf(pdf_type: String, params: GenerationParams, data: Json<Value>, html_converter: State<HtmlConverter>) -> Option<NamedFile> {
+    let start_time = Instant::now();
     let mut handlebars = Handlebars::new();
     handlebars.register_helper("iso_to_nor_date", Box::new(iso_to_nor_date));
     handlebars.register_template_file("fagmelding_header", "templates/fagmelding_header.hbs").unwrap();
@@ -71,6 +73,7 @@ fn genpdf(pdf_type: String, params: GenerationParams, data: Json<Value>, html_co
     args.push(html_file.to_str().unwrap().to_owned());
     args.push(out_file.to_str().unwrap().to_owned());
     html_converter.run_command(args);
+    println!("{}", start_time.elapsed().subsec_millis());
 
     NamedFile::open(out_file).ok()
 }

@@ -13,7 +13,7 @@ WORKDIR /root
 COPY . .
 
 RUN cargo build
-#--release
+#RUN cargo build --release
 
 FROM archlinux/base
 ENV RUST_BACKTRACE=1
@@ -33,9 +33,11 @@ RUN cp -R * /usr
 WORKDIR /app
 
 COPY --from=0 /root/target/debug/pdfgen .
+#COPY --from=0 /root/target/release/pdfgen .
 COPY Rocket.toml .
 RUN mkdir -p /app/out
 COPY templates templates/
 EXPOSE 8000
 
+ENV RUST_BACKTRACE=1
 ENTRYPOINT ["/app/pdfgen"]
