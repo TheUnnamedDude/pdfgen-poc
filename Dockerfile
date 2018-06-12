@@ -12,6 +12,9 @@ WORKDIR /root
 
 COPY . .
 
+COPY webproxy.crt /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+
 RUN cargo build
 #RUN cargo build --release
 

@@ -21,6 +21,7 @@ pipeline {
                     echo "Building ${env.APPLICATION_NAME} ${env.APPLICATION_VERSION}"
                     changeLog = utils.gitVars(env.APPLICATION_NAME).changeLog.toString()
                     slackStatus status: 'started', changeLog: "${changeLog}"
+                    sh 'curl -o webproxy.crt http://crl.adeo.no/crl/eksterne/webproxy.nav.no.crt'
                 }
             }
         }
