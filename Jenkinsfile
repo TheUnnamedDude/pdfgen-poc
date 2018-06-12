@@ -16,12 +16,10 @@ pipeline {
         stage('initialize') {
             steps {
                 script {
-                    def cargoToml = readFile "${env.WORKSPACE}/Cargo.toml"
-                    def matcher = cargoToml =~ 'version *= *"([0-9.]*)"'
-                    env.APPLICATION_VERSION = matcher[0][1]
+                    //def matcher = (readFile("${env.WORKSPACE}/Cargo.toml") =~ 'version *= *"([0-9.]*)"')
+                    env.APPLICATION_VERSION = '0.1.0'//matcher[0][1].toString()
                     echo "Building ${env.APPLICATION_NAME} ${env.APPLICATION_VERSION}"
                     changeLog = utils.gitVars(env.APPLICATION_NAME).changeLog.toString()
-                    githubStatus 'pending'
                     slackStatus status: 'started', changeLog: "${changeLog}"
                 }
             }
@@ -54,18 +52,12 @@ pipeline {
                     slackStatus status: 'aborted'
                 }
             }
-            junit '**/build/test-results/test/*.xml'
-            archiveArtifacts artifacts: 'build/reports/rules.csv', allowEmptyArchive: true
-            archiveArtifacts artifacts: '**/build/libs/*', allowEmptyArchive: true
-            archiveArtifacts artifacts: '**/build/install/*', allowEmptyArchive: true
             deleteDir()
         }
         success {
-            githubStatus 'success'
             slackStatus status: 'success'
         }
         failure {
-            githubStatus 'failure'
             slackStatus status: 'failure'
         }
     }

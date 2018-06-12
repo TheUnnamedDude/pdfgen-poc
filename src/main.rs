@@ -43,6 +43,16 @@ struct GenerationParams {
     header: Option<String>
 }
 
+#[get("/is_alive")]
+fn liveness() -> &'static str {
+    "I'm alive"
+}
+
+#[get("/is_ready")]
+fn readyness() -> &'static str {
+    "I'm readu"
+}
+
 #[post("/<pdf_type>?<params>", format = "application/json", data = "<data>")]
 fn genpdf(pdf_type: String, params: GenerationParams, data: Json<Value>, html_converter: State<HtmlConverter>) -> Option<NamedFile> {
     let start_time = Instant::now();
@@ -79,5 +89,5 @@ fn genpdf(pdf_type: String, params: GenerationParams, data: Json<Value>, html_co
 }
 
 fn main() {
-    rocket::ignite().manage(HtmlConverter::new()).mount("/", routes![genpdf]).launch();
+    rocket::ignite().manage(HtmlConverter::new()).mount("/", routes![genpdf, liveness, readyness]).launch();
 }

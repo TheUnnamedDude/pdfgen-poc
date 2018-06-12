@@ -1,0 +1,33 @@
+image: "repo.adeo.no:5443/integrasjon/pdf-gen"
+replicas:
+  min: 1
+  max: 4
+port: 8080
+healthcheck:
+  liveness:
+    path: /is_alive
+    initialDelay: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /is_ready
+    initialDelay: 5
+    periodSeconds: 5
+    failureThreshold: 30
+prometheus:
+  enabled: false
+  path: /prometheus
+ingress:
+  enabled: true
+resources:
+  limits:
+    cpu: 250m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+memory: 128Mi
+fasitResources:
+  exposed:
+    - alias: pdfgen_rest
+      resourceType: RestService
+      path: /
